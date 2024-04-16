@@ -1,0 +1,39 @@
+﻿@using SolisDensCuraBETA.model
+@model List<Appointment>
+
+@{
+    ViewData["Title"] = "ViewAppointments";
+}
+
+<h2>View Appointments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Requested Time</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@appointment.RequestedTime.ToString("MM/dd/yyyy hh:mm tt")</td>
+                <td>@appointment.Description</td>
+                <td>@appointment.AppointmentStatus</td>
+                <td>
+                    @if (appointment.AppointmentStatus == "pending")
+                    {
+                        <form method="post" asp-action="RespondToAppointment">
+                            <input type="hidden" name="appointmentId" value="@appointment.Id" />
+                            <button type="submit" name="status" value="confirmed" class="btn btn-success">Confirm</button>
+                            <button type="submit" name="status" value="denied" class="btn btn-danger">Deny</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

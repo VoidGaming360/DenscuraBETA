@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.web", "SolisDensCuraBETA.web\SolisDensCuraBETA.web.csproj", "{BBA1ACE8-733F-4DC6-9B59-692D831F32BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.viewmodels", "SolisDensCuraBETA.viewmodels\SolisDensCuraBETA.viewmodels.csproj", "{FFAE6268-CB96-4434-AA60-DC1B3E286324}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.repositories", "SolisDensCuraBETA.repositories\SolisDensCuraBETA.repositories.csproj", "{A4317034-67C0-4C8A-AEC5-F149902D1584}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.services", "SolisDensCuraBETA.services\SolisDensCuraBETA.services.csproj", "{A6EC1A57-FC1E-4FED-B4C8-ADFEC592C2AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.utilities", "SolisDensCuraBETA.utilities\SolisDensCuraBETA.utilities.csproj", "{120B73FB-782E-4EFD-B5D7-D760DCB92FBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolisDensCuraBETA.model", "SolisDensCuraBETA.model\SolisDensCuraBETA.model.csproj", "{6722C36D-41D2-44EA-B75E-66D16D713BCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBA1ACE8-733F-4DC6-9B59-692D831F32BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA1ACE8-733F-4DC6-9B59-692D831F32BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA1ACE8-733F-4DC6-9B59-692D831F32BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA1ACE8-733F-4DC6-9B59-692D831F32BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFAE6268-CB96-4434-AA60-DC1B3E286324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFAE6268-CB96-4434-AA60-DC1B3E286324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFAE6268-CB96-4434-AA60-DC1B3E286324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFAE6268-CB96-4434-AA60-DC1B3E286324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4317034-67C0-4C8A-AEC5-F149902D1584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4317034-67C0-4C8A-AEC5-F149902D1584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4317034-67C0-4C8A-AEC5-F149902D1584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4317034-67C0-4C8A-AEC5-F149902D1584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6EC1A57-FC1E-4FED-B4C8-ADFEC592C2AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6EC1A57-FC1E-4FED-B4C8-ADFEC592C2AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6EC1A57-FC1E-4FED-B4C8-ADFEC592C2AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6EC1A57-FC1E-4FED-B4C8-ADFEC592C2AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{120B73FB-782E-4EFD-B5D7-D760DCB92FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120B73FB-782E-4EFD-B5D7-D760DCB92FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120B73FB-782E-4EFD-B5D7-D760DCB92FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120B73FB-782E-4EFD-B5D7-D760DCB92FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6722C36D-41D2-44EA-B75E-66D16D713BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6722C36D-41D2-44EA-B75E-66D16D713BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6722C36D-41D2-44EA-B75E-66D16D713BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6722C36D-41D2-44EA-B75E-66D16D713BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28158B8C-AEB0-42F4-B7C6-848B6B02A104}
+	EndGlobalSection
+EndGlobal
