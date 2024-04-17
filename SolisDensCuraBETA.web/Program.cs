@@ -36,6 +36,7 @@ builder.Services.AddTransient<IRoom, RoomService>();
 builder.Services.AddTransient<IContactService, ContactService>();
 builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddTransient<ISupplies, SuppliesService>();
+builder.Services.AddTransient<IAppointment, AppointmentService>();
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<UserManager<ApplicationUser>>();

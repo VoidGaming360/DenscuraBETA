@@ -1,5 +1,5 @@
 ﻿@using SolisDensCuraBETA.model
-@model Appointment
+@model SolisDensCuraBETA.viewmodels.AppointmentViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -7,15 +7,45 @@
 
 <h2>Create Appointment</h2>
 
-@using (Html.BeginForm())
-{
-    <div class="form-group">
-        @Html.LabelFor(model => model.RequestedTime)
-        @Html.TextBoxFor(model => model.RequestedTime, new { @class = "form-control" })
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" required />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestedTime" class="control-label"></label>
+                <input asp-for="RequestedTime" class="form-control" />
+                <span asp-validation-for="RequestedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedDentistId">Select Dentist:</label>
+                <select asp-for="SelectedDentistId" class="form-control" asp-items="ViewBag.DentistList">
+                    <option value="">-- Select Dentist --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AppointmentStatus" class="control-label"></label>
+                <input asp-for="AppointmentStatus" class="form-control" type="hidden" value="pending" />
+                <span asp-validation-for="AppointmentStatus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Description)
-        @Html.TextBoxFor(model => model.Description, new { @class = "form-control" })
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-}
+</div>

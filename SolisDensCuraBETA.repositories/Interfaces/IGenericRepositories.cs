@@ -20,6 +20,8 @@ namespace SolisDensCuraBETA.repositories.Interfaces
         void Update(T entity);
         Task<T> DeleteAsync(T entity);
         void Delete(T entity);
+        int Count(Expression<Func<T, bool>> predicate = null);
+        IQueryable<T> Where(Expression<Func<T, bool>> predicate);
 
     }
 }

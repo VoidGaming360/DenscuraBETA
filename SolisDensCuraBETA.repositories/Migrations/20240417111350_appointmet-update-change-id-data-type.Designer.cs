@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SolisDensCuraBETA.repositories;
 
@@ -11,9 +12,11 @@ using SolisDensCuraBETA.repositories;
 namespace SolisDensCuraBETA.repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417111350_appointmet-update-change-id-data-type")]
+    partial class appointmetupdatechangeiddatatype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,6 +244,9 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DentistIdId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -249,22 +255,21 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PatientIdId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("RequestedTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SelectedDentistId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DentistIdId");
+
+                    b.HasIndex("PatientIdId");
 
                     b.ToTable("Appointments");
                 });
@@ -833,6 +838,21 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SolisDensCuraBETA.model.Appointment", b =>
+                {
+                    b.HasOne("SolisDensCuraBETA.model.ApplicationUser", "DentistId")
+                        .WithMany()
+                        .HasForeignKey("DentistIdId");
+
+                    b.HasOne("SolisDensCuraBETA.model.ApplicationUser", "PatientId")
+                        .WithMany()
+                        .HasForeignKey("PatientIdId");
+
+                    b.Navigation("DentistId");
+
+                    b.Navigation("PatientId");
                 });
 
             modelBuilder.Entity("SolisDensCuraBETA.model.Bill", b =>

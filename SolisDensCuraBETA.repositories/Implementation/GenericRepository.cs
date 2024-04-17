@@ -38,6 +38,8 @@ namespace SolisDensCuraBETA.repositories.Implementation
             {
                 dbSet.Attach(entity);
             }
+            dbSet.Remove(entity);
+
         }
 
         async Task<T> IGenericRepositories<T>.DeleteAsync(T entity)
@@ -112,6 +114,16 @@ namespace SolisDensCuraBETA.repositories.Implementation
             dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
+        }
+
+        public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            return dbSet.Where(predicate);
+        }
+
+        public int Count(Expression<Func<T, bool>> predicate)
+        {
+            return dbSet.Count(predicate);
         }
     }
 }

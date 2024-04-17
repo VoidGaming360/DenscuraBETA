@@ -55,6 +55,9 @@
                             <li class="nav-item">
                                 <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/DentistRegister">RegisterDentist</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Appointment" asp-action="ViewAppointments">ViewAppointments</a>
+                            </li>
                             
                         }
 
@@ -65,7 +68,10 @@
                                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Patient</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Appointment" asp-action="Create">Appointment</a>
+                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Appointment" asp-action="Create">New Appointment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Appointment" asp-action="Index">My Appointments</a>
                             </li>
                         }
                         

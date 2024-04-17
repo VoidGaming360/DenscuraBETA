@@ -8,8 +8,8 @@
         public DateTime RequestedTime { get; set; }
         public string Description {  get; set; }
         public string AppointmentStatus { get; set; }
-        public ApplicationUser DentistId { get; set; }
-        public ApplicationUser PatientId { get; set; }
+        public string SelectedDentistId { get; set; }
+        public string PatientId { get; set; }
     }
 }
 
