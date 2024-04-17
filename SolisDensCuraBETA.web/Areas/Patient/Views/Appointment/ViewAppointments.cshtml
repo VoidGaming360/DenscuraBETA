@@ -1,17 +1,51 @@
-﻿@using SolisDensCuraBETA.model
-@model List<Appointment>
+﻿<!-- 
+@model IEnumerable<SolisDensCuraBETA.model.Appointment>
 
 @{
     ViewData["Title"] = "ViewAppointments";
 }
 
-<h2>View Appointments</h2>
+<h1>View Appointments</h1>
 
 <table class="table">
     <thead>
         <tr>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Type</th>
             <th>Requested Time</th>
             <th>Description</th>
+            <th>Patient ID</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@appointment.Id</td>
+                <td>@appointment.Number</td>
+                <td>@appointment.Type</td>
+                <td>@appointment.RequestedTime</td>
+                <td>@appointment.Description</td>
+                <td>@appointment.PatientId</td>
+                <td>@appointment.AppointmentStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>
+-->
+<h1>View Appointments</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Type</th>
+            <th>Requested Time</th>
+            <th>Description</th>
+            <th>Patient ID</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -20,16 +54,24 @@
         @foreach (var appointment in Model)
         {
             <tr>
-                <td>@appointment.RequestedTime.ToString("MM/dd/yyyy hh:mm tt")</td>
+                <td>@appointment.Id</td>
+                <td>@appointment.Number</td>
+                <td>@appointment.Type</td>
+                <td>@appointment.RequestedTime</td>
                 <td>@appointment.Description</td>
+                <td>@appointment.PatientId</td>
                 <td>@appointment.AppointmentStatus</td>
                 <td>
-                    @if (appointment.AppointmentStatus == "pending")
+                    @if (User.IsInRole("Dentist"))
                     {
-                        <form method="post" asp-action="RespondToAppointment">
+                        <form asp-action="UpdateAppointmentStatus" method="post">
                             <input type="hidden" name="appointmentId" value="@appointment.Id" />
-                            <button type="submit" name="status" value="confirmed" class="btn btn-success">Confirm</button>
-                            <button type="submit" name="status" value="denied" class="btn btn-danger">Deny</button>
+                            <select name="status">
+                                <option value="confirmed">Confirmed</option>
+                                <option value="denied">Denied</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                            <button type="submit">Update</button>
                         </form>
                     }
                 </td>

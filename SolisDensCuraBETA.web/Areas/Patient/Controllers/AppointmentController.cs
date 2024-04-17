@@ -62,6 +62,19 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ViewAppointments()
+        {
+            // Retrieve the current logged-in user's ID
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Retrieve appointments for the current user (dentist)
+            var appointments = _appointment.GetAppointmentsForDentist(currentUserId);
+
+            // Pass the appointments to the view
+            return View(appointments);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(AppointmentViewModel vm)
         {
@@ -84,6 +97,29 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Dentist")] // Restrict access to dentists only
+        public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, string status)
+        {
+            // Retrieve the current logged-in user's ID (dentist)
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Retrieve appointments for the current user (dentist)
+            var appointments = _appointment.GetAppointmentsForDentist(currentUserId);
+
+            // Check if the appointment with the provided appointmentId exists in the retrieved appointments
+            var appointment = appointments.FirstOrDefault(a => a.Id == appointmentId);
+            if (appointment != null)
+            {
+                // Update the status of the appointment
+                appointment.AppointmentStatus = status;
+                _appointment.UpdateAppointment(appointment);
+            }
+
+            // Redirect to the same page or a different page
+            return RedirectToAction("ViewAppointments");
+        }
+
         public IActionResult Delete(int id)
         {
             _appointment.DeleteAppointment(id);
@@ -91,73 +127,5 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public AppointmentController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
-
-        // Action for patient to create appointment request
-        public IActionResult Create()
-        {
-            // Logic to display form for creating appointment request
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Create(Appointment appointment)
-        {
-            // Logic to save appointment request and notify dentist
-            appointment.AppointmentStatus = "pending";
-            _context.Appointments.Add(appointment);
-            _context.SaveChanges();
-            // Send notification to dentist
-            return RedirectToAction("Index", "Home"); // Redirect to home page
-        }
-
-        // Action for dentist to view appointment requests
-        public async Task<IActionResult> ViewAppointments()
-        {
-            // Retrieve the current dentist ID from the claims
-            var currentUser = await _userManager.GetUserAsync(User);
-
-            // Query appointments for the current dentist
-            var appointments = _context.Appointments
-                .Where(a => a.DentistId.ToString() == currentUser.Id)
-                .ToList();
-
-            return View(appointments);
-        }
-
-        [HttpPost]
-        public IActionResult RespondToAppointment(int appointmentId, string status)
-        {
-            var appointment = _context.Appointments.Find(appointmentId);
-            if (appointment != null)
-            {
-                appointment.AppointmentStatus = status;
-                _context.SaveChanges();
-                // Send notification to patient
-            }
-            return RedirectToAction("ViewAppointments");
-        }
-        */
     }
 }
