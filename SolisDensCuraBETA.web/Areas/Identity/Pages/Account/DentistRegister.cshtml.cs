@@ -134,7 +134,7 @@ namespace SolisDensCuraBETA.web.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync((ApplicationUser)user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync((ApplicationUser)user, Input.Name, CancellationToken.None);
                 await _emailStore.SetEmailAsync((ApplicationUser)user, Input.Email, CancellationToken.None);
 
                 user.Name = Input.Name;

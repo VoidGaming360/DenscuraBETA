@@ -1,0 +1,7 @@
+﻿body {
+}
+
+.notification-menu {
+    max-height: 200px; /* Set maximum height for the dropdown menu */
+    overflow-y: auto; /* Enable vertical scrolling */
+}

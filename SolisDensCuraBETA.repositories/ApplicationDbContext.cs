@@ -32,6 +32,7 @@ namespace SolisDensCuraBETA.repositories
         public DbSet<PatientReport> PatientReports { get; set; }
         public DbSet<Department> Departments { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Timing> Timings { get; set; }
 
 

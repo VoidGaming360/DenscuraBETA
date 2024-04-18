@@ -1,0 +1,10 @@
+﻿@model List<SolisDensCuraBETA.viewmodels.PatientNotificationViewModel>
+
+@foreach (var notification in Model)
+{
+    <div>
+        <p>Message: @notification.Message</p>
+        <p>Timestamp: @notification.Timestamp</p>
+        <!-- Other notification details -->
+    </div>
+}

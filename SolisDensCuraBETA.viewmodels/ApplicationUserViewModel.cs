@@ -37,7 +37,21 @@ namespace SolisDensCuraBETA.viewmodels
             
         }
 
-        public ApplicationUser ConvertViewModelToModel(ApplicationUserViewModel user)
+        public ApplicationUser ConvertViewModelToModel(ApplicationUser userToUpdate, ApplicationUserViewModel viewModel)
+        {
+            // Update properties of the existing ApplicationUser instance
+            userToUpdate.Name = viewModel.Name;
+            userToUpdate.Address = viewModel.Address;
+            userToUpdate.Gender = viewModel.Gender;
+            userToUpdate.IsDentist = viewModel.IsDentist;
+            userToUpdate.Specialist = viewModel.Specialist;
+            userToUpdate.Email = viewModel.Email;
+            userToUpdate.UserName = viewModel.UserName;
+
+            return userToUpdate;
+        }
+
+        /*public ApplicationUser ConvertViewModelToModel(ApplicationUserViewModel user)
         {
             return new ApplicationUser
             {
@@ -51,6 +65,7 @@ namespace SolisDensCuraBETA.viewmodels
 
             };
         }
+        */
 
     }
 }

@@ -121,15 +121,15 @@ namespace SolisDensCuraBETA.web.Areas.Identity.Pages.Account
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("Admin"))
                         {
-                            return RedirectToAction("Index", "Clinics", new { area = "Admin" });
+                            return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
                         }
                         else if (roles.Contains("Dentist"))
                         {
-                            return RedirectToAction("Index", "Dentist", new { area = "Dentist" });
+                            return RedirectToAction("Index", "DentistHome", new { area = "Dentist" });
                         }
                         else if (roles.Contains("Patient"))
                         {
-                            return RedirectToAction("Index", "PatientHome", new { area = "Patient" });
+                            return RedirectToAction("Index", "Home", new { area = "Patient" });
                         }
                     }
 
