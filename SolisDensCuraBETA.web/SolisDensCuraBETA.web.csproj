@@ -26,4 +26,7 @@
     <ProjectReference Include="..\SolisDensCuraBETA.utilities\SolisDensCuraBETA.utilities.csproj" />
     <ProjectReference Include="..\SolisDensCuraBETA.viewmodels\SolisDensCuraBETA.viewmodels.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\microsoft\signalr\dist\browser\" />
+  </ItemGroup>
 </Project>

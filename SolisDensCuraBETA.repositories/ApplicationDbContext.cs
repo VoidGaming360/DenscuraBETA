@@ -33,8 +33,27 @@ namespace SolisDensCuraBETA.repositories
         public DbSet<Department> Departments { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Timing> Timings { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            // Configure the relationship between ApplicationUser and ChatMessage
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(m => m.Sender)
+                .WithMany(u => u.SentMessages)
+                .HasForeignKey(m => m.SenderId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict); // Specify the delete behavior here
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(m => m.Receiver)
+                .WithMany(u => u.ReceivedMessages)
+                .HasForeignKey(m => m.ReceiverId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict); // Specify the delete behavior here
+        }
     }
 }

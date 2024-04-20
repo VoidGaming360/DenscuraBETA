@@ -1,0 +1,46 @@
+﻿@model IEnumerable<SolisDensCuraBETA.viewmodels.ChatMessageViewModel>
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Chat</h1>
+
+<!-- Display chat users -->
+<div>
+    <h2>Users You Have Chatted With:</h2>
+    @foreach (var chatUser in ViewBag.ChatUsers)
+    {
+        <div>
+            <p>@chatUser.Name:</p>
+            <ul>
+                @foreach (var message in Model.Where(m => m.ReceiverId == chatUser.Id))
+                {
+                    <li>@message.Message</li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+<!-- Form to send messages -->
+<form id="sendMessageForm" asp-controller="Chat" asp-action="SendMessage" method="post">
+    <!-- Hidden field for sender ID -->
+    <input type="hidden" name="senderId" value="@ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value" />
+
+    <!-- Dropdown list of users (excluding currently logged-in user) -->
+    <select name="receiverId">
+        @foreach (var user in ViewBag.Users)
+        {
+            <option value="@user.Id">@user.UserName</option>
+        }
+    </select>
+
+    <!-- Input field for message -->
+    <input type="text" name="message" />
+    <!-- Submit button -->
+    <button type="submit">Send</button>
+</form>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>

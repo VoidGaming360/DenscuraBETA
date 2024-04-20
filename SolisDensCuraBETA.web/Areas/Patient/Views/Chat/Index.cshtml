@@ -1,0 +1,61 @@
+﻿<h1>Chat</h1>
+
+<div class="container">
+    <form method="post" action="@Url.Action("SendMessage", "Chat")">
+        <div class="row p-1">
+            <div class="col-1">Receiver</div>
+            <div class="col-5">
+                <select id="receiverId" name="receiverId" class="form-control">
+                    <option value="">Select Receiver</option>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-1">Message</div>
+            <div class="col-5"><input type="text" class="w-100" name="message" /></div>
+        </div>
+        <div class="row p-1">
+            <div class="col-6 text-end">
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+
+    <div>
+        <h1>Chat History</h1>
+        <div>
+            <form method="post" action="@Url.Action("Index", "Chat")">
+                <label for="userDropdown">Select User:</label>
+                <select id="userDropdown" name="selectedUserId" class="form-control">
+                    <option value="">Select User</option>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">Show Messages</button>
+            </form>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedUserId))
+        {
+            var selectedUserId = ViewBag.SelectedUserId;
+            <div id="messageDisplay_@selectedUserId">
+                @foreach (var message in ViewBag.Messages)
+                {
+                    <p>@message.SenderName: @message.Message</p>
+                }
+            </div>
+        }
+    </div>
+</div>

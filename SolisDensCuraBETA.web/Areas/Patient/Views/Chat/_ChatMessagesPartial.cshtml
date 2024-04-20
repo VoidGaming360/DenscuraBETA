@@ -1,0 +1,17 @@
+﻿@model IEnumerable<SolisDensCuraBETA.viewmodels.ChatMessageViewModel>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var message in Model)
+        {
+            <li>
+                <strong>@message.SenderName:</strong> @message.Message
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No messages found.</p>
+}

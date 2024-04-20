@@ -44,5 +44,12 @@ namespace SolisDensCuraBETA.repositories.Implementation
         { 
             _context.SaveChanges(); 
         }
+
+        public async Task<int> SaveChangesAsync() // Implement this method
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+
     }
 }

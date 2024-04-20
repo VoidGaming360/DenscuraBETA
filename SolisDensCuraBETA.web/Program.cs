@@ -35,6 +35,7 @@ builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>()
 builder.Services.AddTransient<ISupplies, SuppliesService>();
 builder.Services.AddTransient<IAppointment, AppointmentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 // Add SignalR services
 builder.Services.AddSignalR();
@@ -91,6 +92,9 @@ app.Use(async (context, next) =>
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<NotificationHub>("/notificationHub");
+    
+
+    endpoints.MapHub<ChatHub>("/chatHub");
     endpoints.MapRazorPages();
 
     endpoints.MapControllerRoute(

@@ -26,11 +26,19 @@ namespace SolisDensCuraBETA.model
 
         public string PictureUri { get; set; }
 
+        // Navigation property for messages sent by this user
+        public ICollection<ChatMessage> SentMessages { get; set; }
+
+        // Navigation property for messages received by this user
+        public ICollection<ChatMessage> ReceivedMessages { get; set; }
+
         //public Department Department { get; set; }
         [NotMapped] 
         public ICollection<Appointment> Appointments { get; set; }
         
         public ICollection<Payroll> Payrolls { get; set; }
+
+        public ICollection<ChatMessage> ChatMessages { get; set; }
     }
 }
 
