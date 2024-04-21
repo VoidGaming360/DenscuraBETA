@@ -28,6 +28,9 @@
             <th>
                 AppointmentStatus
             </th>
+            <th>
+                AppointmentDate
+            </th>
 
             <th></th>
         </tr>
@@ -53,6 +56,20 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.AppointmentStatus)
+                </td>
+                <td>
+                    @if (item.AppointmentStatus == "confirmed")
+                    {
+                        @item.AppointmentDate?.ToShortDateString()
+                    }
+                    else if (item.AppointmentStatus == "pending")
+                    {
+                        <text>Wait for confirmation</text>
+                    }
+                    else if (item.AppointmentStatus == "denied")
+                    {
+                        <text>Appointment Denied</text>
+                    }
                 </td>
                 <td>
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })

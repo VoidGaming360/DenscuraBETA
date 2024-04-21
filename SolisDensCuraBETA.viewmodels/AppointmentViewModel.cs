@@ -20,6 +20,9 @@ namespace SolisDensCuraBETA.viewmodels
 
         public string SelectedDentistId { get; set; }
 
+        public string ReasonForVisit { get; set; }
+        public DateTime? AppointmentDate { get; set; }  
+
 
         public AppointmentViewModel()
         {
@@ -33,7 +36,9 @@ namespace SolisDensCuraBETA.viewmodels
             RequestedTime = model.RequestedTime;
             Description = model.Description;
             AppointmentStatus = model.AppointmentStatus;
-        }
+            ReasonForVisit = model.ReasonForVisit;
+            AppointmentDate = model.AppointmentDate;
+    }
 
         public Appointment ConvertViewModel(AppointmentViewModel model)
         {
@@ -44,7 +49,9 @@ namespace SolisDensCuraBETA.viewmodels
                 Type = model.Type,
                 RequestedTime = model.RequestedTime,
                 Description = model.Description,
-                AppointmentStatus = model.AppointmentStatus
+                AppointmentStatus = model.AppointmentStatus,
+                ReasonForVisit = model.ReasonForVisit,
+                AppointmentDate = model.AppointmentDate,
             };
         }
     }

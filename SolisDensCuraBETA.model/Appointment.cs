@@ -10,6 +10,8 @@
         public string AppointmentStatus { get; set; }
         public string SelectedDentistId { get; set; }
         public string PatientId { get; set; }
+        public string ReasonForVisit { get; set; }
+        public DateTime? AppointmentDate { get; set; }
     }
 }
 

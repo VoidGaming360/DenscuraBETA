@@ -22,9 +22,21 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RequestedTime" class="control-label"></label>
-                <input asp-for="RequestedTime" class="form-control" />
-                <span asp-validation-for="RequestedTime" class="text-danger"></span>
+                <!-- Hidden field for RequestedTime with current datetime -->
+                <input type="hidden" asp-for="RequestedTime" value="@DateTime.Now" />
+
+                <!-- Display current datetime (optional) -->
+                <label class="control-label">Created Time: @DateTime.Now</label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReasonForVisit" class="control-label">Reason for Visit</label>
+                <select asp-for="ReasonForVisit" class="form-control">
+                    <option value="Dental Emergency/ Tooth Pain">Dental Emergency/ Tooth Pain</option>
+                    <option value="Dental Hygeine/ Polishing">Dental Hygiene/ Polishing</option>
+                    <option value="Dental Checkup">Dental Checkup</option>
+                    <option value="Dental Extraction">Dental Extraction</option>
+                </select>
+                <span asp-validation-for="ReasonForVisit" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -42,6 +54,12 @@
                 <input asp-for="AppointmentStatus" class="form-control" type="hidden" value="pending" />
                 <span asp-validation-for="AppointmentStatus" class="text-danger"></span>
             </div>
+            <div class="form-group" id="appointmentDateField" style="display:none;">
+                <label asp-for="AppointmentDate" class="control-label">Appointment Date</label>
+                <input asp-for="AppointmentDate" class="form-control" />
+                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            </div>
+           
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -49,3 +67,4 @@
         </form>
     </div>
 </div>
+

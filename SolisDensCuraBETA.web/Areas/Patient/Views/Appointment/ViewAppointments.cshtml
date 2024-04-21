@@ -1,5 +1,4 @@
-﻿<!-- 
-@model IEnumerable<SolisDensCuraBETA.model.Appointment>
+﻿@model IEnumerable<SolisDensCuraBETA.model.Appointment>
 
 @{
     ViewData["Title"] = "ViewAppointments";
@@ -13,39 +12,10 @@
             <th>ID</th>
             <th>Number</th>
             <th>Type</th>
-            <th>Requested Time</th>
+            <th>Created Time</th>
+            <th>ReasonForVisit</th>
             <th>Description</th>
-            <th>Patient ID</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var appointment in Model)
-        {
-            <tr>
-                <td>@appointment.Id</td>
-                <td>@appointment.Number</td>
-                <td>@appointment.Type</td>
-                <td>@appointment.RequestedTime</td>
-                <td>@appointment.Description</td>
-                <td>@appointment.PatientId</td>
-                <td>@appointment.AppointmentStatus</td>
-            </tr>
-        }
-    </tbody>
-</table>
--->
-<h1>View Appointments</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Number</th>
-            <th>Type</th>
-            <th>Requested Time</th>
-            <th>Description</th>
-            <th>Patient ID</th>
+            <th>Appointment Date</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -58,8 +28,22 @@
                 <td>@appointment.Number</td>
                 <td>@appointment.Type</td>
                 <td>@appointment.RequestedTime</td>
+                <td>@appointment.ReasonForVisit</td>
                 <td>@appointment.Description</td>
-                <td>@appointment.PatientId</td>
+                <td>
+                    @if (appointment.AppointmentStatus == "confirmed")
+                    {
+                        @appointment.AppointmentDate?.ToShortDateString()
+                    }
+                    else if (appointment.AppointmentStatus == "pending")
+                    {
+                        <text>Wait for confirmation</text>
+                    }
+                    else if (appointment.AppointmentStatus == "denied")
+                    {
+                        <text>Appointment Denied</text>
+                    }
+                </td>
                 <td>@appointment.AppointmentStatus</td>
                 <td>
                     @if (User.IsInRole("Dentist"))

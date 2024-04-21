@@ -107,6 +107,7 @@ namespace SolisDensCuraBETA.services
                 PatientId = vm.PatientId,
                 SelectedDentistId = vm.SelectedDentistId,
                 AppointmentStatus = AppointmentStatus.pending.ToString(),
+                ReasonForVisit = vm.ReasonForVisit,
 
             };
 
