@@ -125,5 +125,10 @@ namespace SolisDensCuraBETA.repositories.Implementation
         {
             return dbSet.Count(predicate);
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

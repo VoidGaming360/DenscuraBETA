@@ -1,5 +1,6 @@
 ﻿using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.repositories;
 using SolisDensCuraBETA.utilities;
 using SolisDensCuraBETA.viewmodels;
 using System;
@@ -7,16 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SolisDensCuraBETA.services
 {
     public class AppointmentService : IAppointment
     {
         private IUnitOfWork _unitOfWork;
+        private readonly ApplicationDbContext _dbContext;
 
-        public AppointmentService(IUnitOfWork unitOfWork)
+        public AppointmentService(IUnitOfWork unitOfWork, ApplicationDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
+            _dbContext = dbContext;
         }
 
         public void DeleteAppointment(int id)
@@ -145,6 +149,13 @@ namespace SolisDensCuraBETA.services
 
             // Save changes
             _unitOfWork.Save();
+        }
+
+        public IEnumerable<Appointment> GetConfirmedAppointments(string dentistId)
+        {
+            return _dbContext.Appointments
+                .Where(a => a.SelectedDentistId == dentistId && a.AppointmentStatus == AppointmentStatus.confirmed.ToString())
+                .ToList();
         }
 
         public void UpdateAppointment(Appointment appointment)

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SolisDensCuraBETA.model.Treatment>
+
+<h2>Treatments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>DentistId</th>
+            <th>PatientId</th>
+            <th>AppointmentId</th>
+            <th>Notes</th>
+            <th>TreatmentPlan</th>
+            <th>Description</th>
+            <th>Prescription</th>
+            <th>Diagnosis</th>
+            <th>Costs</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var treatment in Model)
+        {
+            <tr>
+                <td>@treatment.Id</td>
+                <td>@treatment.DentistId</td>
+                <td>@treatment.PatientId</td>
+                <td>@treatment.AppointmentId</td>
+                <td>@treatment.Notes</td>
+                <td>@treatment.TreatmentPlan</td>
+                <td>@treatment.Description</td>
+                <td>@treatment.Prescription</td>
+                <td>@treatment.Diagnosis</td>
+                <td>@treatment.Costs</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary">Add Treatment Plan</a>
+</div>

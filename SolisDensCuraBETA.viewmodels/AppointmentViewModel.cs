@@ -38,20 +38,20 @@ namespace SolisDensCuraBETA.viewmodels
             AppointmentStatus = model.AppointmentStatus;
             ReasonForVisit = model.ReasonForVisit;
             AppointmentDate = model.AppointmentDate;
-    }
+        }
 
-        public Appointment ConvertViewModel(AppointmentViewModel model)
+        public static Appointment ConvertViewModelToAppointment(AppointmentViewModel viewModel)
         {
             return new Appointment
             {
-                Id = model.Id,
-                Number = model.Number,
-                Type = model.Type,
-                RequestedTime = model.RequestedTime,
-                Description = model.Description,
-                AppointmentStatus = model.AppointmentStatus,
-                ReasonForVisit = model.ReasonForVisit,
-                AppointmentDate = model.AppointmentDate,
+                Id = viewModel.Id,
+                Number = viewModel.Number,
+                Type = viewModel.Type,
+                RequestedTime = viewModel.RequestedTime,
+                Description = viewModel.Description,
+                AppointmentStatus = viewModel.AppointmentStatus,
+                ReasonForVisit = viewModel.ReasonForVisit,
+                AppointmentDate = viewModel.AppointmentDate
             };
         }
     }

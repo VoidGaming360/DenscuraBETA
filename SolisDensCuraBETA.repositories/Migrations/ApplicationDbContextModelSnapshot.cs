@@ -817,6 +817,58 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.ToTable("Timings");
                 });
 
+            modelBuilder.Entity("SolisDensCuraBETA.model.Treatment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Costs")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DentistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentPlan")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Treatments");
+                });
+
             modelBuilder.Entity("SolisDensCuraBETA.model.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -1063,6 +1115,13 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Navigation("DoctorID");
                 });
 
+            modelBuilder.Entity("SolisDensCuraBETA.model.Treatment", b =>
+                {
+                    b.HasOne("SolisDensCuraBETA.model.ApplicationUser", null)
+                        .WithMany("Treatments")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("SolisDensCuraBETA.model.Clinic", b =>
                 {
                     b.Navigation("Contacts");
@@ -1101,6 +1160,8 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Navigation("ReceivedMessages");
 
                     b.Navigation("SentMessages");
+
+                    b.Navigation("Treatments");
                 });
 #pragma warning restore 612, 618
         }

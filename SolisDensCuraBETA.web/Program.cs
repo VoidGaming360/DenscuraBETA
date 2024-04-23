@@ -34,6 +34,7 @@ builder.Services.AddTransient<IContactService, ContactService>();
 builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddTransient<ISupplies, SuppliesService>();
 builder.Services.AddTransient<IAppointment, AppointmentService>();
+builder.Services.AddTransient<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 
@@ -106,7 +107,7 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
-// Data seeding should be performed after authentication and authorization middleware
+
 DataSeeding(app);
 
 app.Run();

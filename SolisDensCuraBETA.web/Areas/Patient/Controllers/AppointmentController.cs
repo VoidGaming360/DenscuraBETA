@@ -21,6 +21,7 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         private IAppointment _appointment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITreatmentService _treatmentService;
 
         public AppointmentController(IAppointment Appointment, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {

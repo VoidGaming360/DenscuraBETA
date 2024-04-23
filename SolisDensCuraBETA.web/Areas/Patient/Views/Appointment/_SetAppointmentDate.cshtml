@@ -1,26 +1,27 @@
-﻿<!-- _SetAppointmentDate.cshtml -->
-
-<div id="setAppointmentDateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="setAppointmentDateModalLabel" aria-hidden="true">
+﻿<div id="setAppointmentDateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="setAppointmentDateModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="setAppointmentDateModalLabel">Set Appointment Date</h5>
+                <h5 class="modal-title" id="setAppointmentDateModalLabel">Set Appointment Date and Time</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="setAppointmentDateForm" method="post" action="@Url.Action("SetAppointmentDate", "Appointment")">
+                <form id="setAppointmentDateForm">
                     <div class="form-group">
                         <label for="appointmentDate">Appointment Date:</label>
                         <input type="date" class="form-control" id="appointmentDate" name="appointmentDate" required>
-                        <input type="hidden" name="appointmentId" value="@Model.AppointmentId" />
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Set Appointment Date</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="form-group">
+                        <label for="appointmentTime">Appointment Time:</label>
+                        <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
                     </div>
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="setAppointmentDateBtn">Set Appointment Date and Time</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,81 @@
+﻿@using SolisDensCuraBETA.model
+@model SolisDensCuraBETA.viewmodels.TreatmentViewModel
+
+<h2>Create New Treatment Plan</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="AppointmentId">Appointment:</label>
+        @if (Model.Appointments != null && Model.Appointments.Any())
+        {
+            <select asp-for="AppointmentId" asp-items="@(new SelectList(Model.Appointments, "Id", "Id"))" class="form-control">
+                <option value="">Select Appointment</option>
+            </select>
+        }
+        else
+        {
+            <span class="text-danger">No appointments available</span>
+        }
+        <span asp-validation-for="AppointmentId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="DentistId" value="@Model.DentistId" />
+    <input type="hidden" asp-for="PatientId" value="@Model.PatientId" />
+    <div class="form-group">
+        <label asp-for="Notes">Notes:</label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TreatmentPlan">Treatment Plan:</label>
+        <textarea asp-for="TreatmentPlan" class="form-control"></textarea>
+        <span asp-validation-for="TreatmentPlan" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">Description:</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Prescription">Prescription:</label>
+        <input asp-for="Prescription" class="form-control" />
+        <span asp-validation-for="Prescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Diagnosis">Diagnosis:</label>
+        <input asp-for="Diagnosis" class="form-control" />
+        <span asp-validation-for="Diagnosis" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Costs">Costs:</label>
+        <input asp-for="Costs" class="form-control" />
+        <span asp-validation-for="Costs" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add event listener to appointment select element
+        var appointmentSelect = document.getElementById('AppointmentId');
+        appointmentSelect.addEventListener('change', updatePatientId);
+
+        // Initial call to update patient ID when the page loads
+        updatePatientId();
+    });
+
+    function updatePatientId() {
+        // Get the selected appointment ID from the select element
+        var appointmentId = document.getElementById('AppointmentId').value;
+
+        // Use AJAX to fetch appointment details including patient ID
+        fetch('/Patient/GetAppointmentDetails/' + appointmentId)
+            .then(response => response.json())
+            .then(data => {
+                // Update the hidden input for PatientId with the fetched patient ID
+                document.getElementById('PatientId').value = data.patientId || '';
+            })
+            .catch(error => {
+                console.error('Error fetching appointment details:', error);
+            });
+    }
+</script>
