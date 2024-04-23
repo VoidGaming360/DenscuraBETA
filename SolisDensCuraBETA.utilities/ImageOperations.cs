@@ -38,5 +38,22 @@ namespace SolisDensCuraBETA.utilities
 
             return uniqueFileName;
         }
+
+        public void DeleteImage(string fileName)
+        {
+            // Combine directory and file name to get full path
+            string filePath = Path.Combine(_env.WebRootPath, "Images", fileName);
+
+            // Check if the file exists before attempting to delete it
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            else
+            {
+                // Handle the case when the file does not exist or has already been deleted
+                // You can log an error message or take other appropriate actions
+            }
+        }
     }
 }

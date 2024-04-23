@@ -1,4 +1,5 @@
 ﻿@page
+@using SolisDensCuraBETA.model
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -9,22 +10,50 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        @if (!string.IsNullOrEmpty(Model.PictureUri))
+        {
+            <div class="text-center">
+                <img src="~/Images/@Model.PictureUri" alt="User Picture" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+            </div>
+        }
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <input type="file" id="picture-file" name="profilePicture" accept="image/*" style="display: none;" />
+                <label for="picture-file" class="btn btn-primary">Choose Picture</label>
+            </div>
             <div class="form-floating mb-3">
                 <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
                 <label asp-for="Username" class="form-label"></label>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
+                <input asp-for="Input.Name" class="form-control" placeholder="Name" />
+                <label asp-for="Input.Name" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Gender" class="form-select">
+                    @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+                <label asp-for="Input.Gender" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Nationality" class="form-control" placeholder="Nationality" />
+                <label asp-for="Input.Nationality" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Address" class="form-control" placeholder="Address" />
+                <label asp-for="Input.Address" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

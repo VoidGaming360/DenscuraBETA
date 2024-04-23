@@ -38,6 +38,8 @@ builder.Services.AddTransient<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 
+builder.Services.AddScoped<ImageOperations>();
+
 // Add SignalR services
 builder.Services.AddSignalR();
 
