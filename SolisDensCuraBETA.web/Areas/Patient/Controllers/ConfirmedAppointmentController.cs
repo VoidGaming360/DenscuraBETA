@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.services;
-using System.Linq;
 
 namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 {

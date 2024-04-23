@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using SolisDensCuraBETA.repositories;
 using SolisDensCuraBETA.repositories.Interfaces;
 
@@ -49,7 +46,8 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
                 .AsEnumerable() // Execute the query in memory
                 .Select(m => new ChatMessageViewModel
                 {
-                    SenderName = m.SenderId == currentUserId ? GetCurrentUser().Name : (users.FirstOrDefault(u => u.Id == selectedUserId) != null ? users.FirstOrDefault(u => u.Id == selectedUserId).Name : ""),
+                    SenderName = m.SenderId == currentUserId ? 
+                    GetCurrentUser().Name : (users.FirstOrDefault(u => u.Id == selectedUserId) != null ? users.FirstOrDefault(u => u.Id == selectedUserId).Name : ""),
                     Message = m.Message,
                     SentAt = m.SentAt // Add SentAt property
                 })

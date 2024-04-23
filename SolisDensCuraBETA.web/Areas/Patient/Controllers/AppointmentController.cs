@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.repositories;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;

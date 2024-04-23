@@ -1,10 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
-using SolisDensCuraBETA.model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SolisDensCuraBETA.model;
+
 
 namespace SolisDensCuraBETA.viewmodels
 {

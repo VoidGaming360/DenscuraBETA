@@ -1,7 +1,4 @@
 ﻿using SolisDensCuraBETA.model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SolisDensCuraBETA.viewmodels
 {

@@ -2,13 +2,6 @@
 using SolisDensCuraBETA.repositories.Interfaces;
 using SolisDensCuraBETA.utilities;
 using SolisDensCuraBETA.viewmodels;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
 {

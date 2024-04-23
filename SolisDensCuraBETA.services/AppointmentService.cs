@@ -3,12 +3,6 @@ using SolisDensCuraBETA.repositories.Interfaces;
 using SolisDensCuraBETA.repositories;
 using SolisDensCuraBETA.utilities;
 using SolisDensCuraBETA.viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace SolisDensCuraBETA.services
 {
