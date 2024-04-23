@@ -19,69 +19,44 @@ namespace SolisDensCuraBETA.services
             _unitOfWork = unitOfWork;
         }
 
-        public Appointment GetAppointmentById(int appointmentId)
+        public IEnumerable<Treatment> GetAllTreatments(Expression<Func<Treatment, bool>> filter = null,
+                                               Func<IQueryable<Treatment>, IOrderedQueryable<Treatment>> orderBy = null,
+                                               string includeProperties = "")
         {
-            // Access the GenericRepository<Appointment> through the IUnitOfWork
-            return _unitOfWork.GenericRepositories<Appointment>().GetById(appointmentId);
+            return _unitOfWork.GenericRepositories<Treatment>().GetAll(filter, orderBy, includeProperties).ToList();
+        }
+        public async Task<Treatment> GetTreatmentByIdAsync(int id)
+        {
+            return await _unitOfWork.GenericRepositories<Treatment>().GetByIdAsync(id);
         }
 
-
-
-        public void CreateTreatment(TreatmentViewModel vm)
+        public async Task AddTreatmentAsync(Treatment treatment)
         {
-            var treatment = new Treatment
+            await _unitOfWork.GenericRepositories<Treatment>().AddAsync(treatment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateTreatmentAsync(Treatment treatment)
+        {
+            _unitOfWork.GenericRepositories<Treatment>().Update(treatment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteTreatmentAsync(int id)
+        {
+            var treatment = await _unitOfWork.GenericRepositories<Treatment>().GetByIdAsync(id);
+            if (treatment != null)
             {
-                // Map properties from the view model to the treatment entity
-                AppointmentId = vm.AppointmentId,
-                Notes = vm.Notes,
-                TreatmentPlan = vm.TreatmentPlan,
-                Description = vm.Description,
-                Prescription = vm.Prescription,
-                Diagnosis = vm.Diagnosis,
-                Costs = vm.Costs,
-                // Map other properties as needed
-            };
-
-            // Add the treatment to the repository and save changes
-            _unitOfWork.GenericRepositories<Treatment>().Add(treatment);
-            _unitOfWork.Save();
-        }
-
-        public List<Treatment> GetTreatmentsForAppointment(int appointmentId)
-        {
-            // Retrieve treatments associated with the given appointmentId
-            return _unitOfWork.GenericRepositories<Treatment>()
-                                .Where(t => t.AppointmentId == appointmentId)
-                                .ToList();
-        }
-
-        public async Task CreateTreatmentAsync(Treatment treatment)
-        {
-            _unitOfWork.GenericRepositories<Treatment>().Add(treatment);
-            await _unitOfWork.GenericRepositories<Treatment>().SaveChangesAsync(); // Assuming you have a method like this for asynchronous saving changes
-        }
-
-        public void SaveTreatment(Treatment treatment)
-        {
-            // Access the GenericRepository<Treatment> through the IUnitOfWork
-            var treatmentRepository = _unitOfWork.GenericRepositories<Treatment>();
-
-            // Add or update the treatment in the repository
-            if (treatment.Id == 0)
-            {
-                // If the treatment ID is 0, it means it's a new treatment
-                treatmentRepository.Add(treatment);
+                _unitOfWork.GenericRepositories<Treatment>().Delete(treatment);
+                await _unitOfWork.SaveChangesAsync();
             }
-            else
-            {
-                // If the treatment ID is not 0, it means it's an existing treatment
-                treatmentRepository.Update(treatment);
-            }
-
-            // Save changes to the database
-            _unitOfWork.Save();
         }
 
+        public Task<int> CountTreatmentsAsync(Expression<Func<Treatment, bool>> predicate = null)
+        {
+            int count = _unitOfWork.GenericRepositories<Treatment>().Count(predicate);
+            return Task.FromResult(count);
+        }
 
     }
 }

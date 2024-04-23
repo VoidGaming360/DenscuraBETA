@@ -12,6 +12,8 @@
         public string PatientId { get; set; }
         public string ReasonForVisit { get; set; }
         public DateTime? AppointmentDate { get; set; }
+
+        //public ICollection<Treatment> Treatments { get; set; }
     }
 }
 

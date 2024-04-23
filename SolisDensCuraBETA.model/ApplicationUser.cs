@@ -35,8 +35,6 @@ namespace SolisDensCuraBETA.model
         //public Department Department { get; set; }
         [NotMapped] 
         public ICollection<Appointment> Appointments { get; set; }
-
-        public ICollection<Treatment> Treatments { get; set; }
         
         public ICollection<Payroll> Payrolls { get; set; }
 

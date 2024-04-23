@@ -29,12 +29,13 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 
             return View(confirmedAppointments);
         }
-
+        /*
         [HttpPost]
         public IActionResult Proceed(int appointmentId)
         {
             // Redirect to the Create action of the TreatmentController with the appointmentId parameter
             return RedirectToAction("Create", "Treatment", new { appointmentId });
         }
+        */
     }
 }

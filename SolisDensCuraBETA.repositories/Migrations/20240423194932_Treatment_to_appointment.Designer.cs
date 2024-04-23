@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SolisDensCuraBETA.repositories;
 
@@ -11,9 +12,11 @@ using SolisDensCuraBETA.repositories;
 namespace SolisDensCuraBETA.repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423194932_Treatment_to_appointment")]
+    partial class Treatment_to_appointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -825,8 +828,18 @@ namespace SolisDensCuraBETA.repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Costs")
                         .HasColumnType("int");
+
+                    b.Property<string>("DentistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -840,8 +853,9 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Prescription")
                         .IsRequired()
@@ -852,6 +866,8 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Treatments");
                 });
@@ -1102,6 +1118,13 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Navigation("DoctorID");
                 });
 
+            modelBuilder.Entity("SolisDensCuraBETA.model.Treatment", b =>
+                {
+                    b.HasOne("SolisDensCuraBETA.model.ApplicationUser", null)
+                        .WithMany("Treatments")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("SolisDensCuraBETA.model.Clinic", b =>
                 {
                     b.Navigation("Contacts");
@@ -1140,6 +1163,8 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Navigation("ReceivedMessages");
 
                     b.Navigation("SentMessages");
+
+                    b.Navigation("Treatments");
                 });
 #pragma warning restore 612, 618
         }

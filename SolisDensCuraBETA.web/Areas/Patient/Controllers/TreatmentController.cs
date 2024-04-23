@@ -1,130 +1,111 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;
-using SolisDensCuraBETA.repositories.Migrations;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
+namespace SolisDensCuraBETA.controllers
 {
     [Area("Patient")]
     [Authorize(Roles = "Dentist")]
-    public class TreatmentController : Controller
+    public class TreatmentController : Controller // Change ControllerBase to Controller
     {
         private readonly ITreatmentService _treatmentService;
-        private IAppointment _appointment;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TreatmentController(ITreatmentService treatmentService, IAppointment Appointment, UserManager<ApplicationUser> userManager)
+        public TreatmentController(ITreatmentService treatmentService)
         {
             _treatmentService = treatmentService;
-            _appointment = Appointment;
-            _userManager = userManager;
         }
 
-        
-        public IActionResult Index(int appointmentId)
+        [HttpGet]
+        public IActionResult Index()
         {
-            // Retrieve treatments for the given appointmentId
-            var treatments = _treatmentService.GetTreatmentsForAppointment(appointmentId);
+            var treatments = _treatmentService.GetAllTreatments();
             return View(treatments);
         }
-        /*
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var treatment = await _treatmentService.GetTreatmentByIdAsync(id);
+            if (treatment == null)
+            {
+                return NotFound();
+            }
+            return View(treatment);
+        }
+
         [HttpGet]
         public IActionResult Create()
         {
-            var viewModel = new TreatmentViewModel(); // Assuming you have a view model for treatment plan
-            return View(viewModel);
+            return View();
         }
-        */
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Treatment treatment)
+        {
+            if (ModelState.IsValid)
+            {
+                await _treatmentService.AddTreatmentAsync(treatment);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(treatment);
+        }
+
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Edit(int id)
         {
-            var viewModel = new TreatmentViewModel();
-            var dentistId = _userManager.GetUserId(User);
-
-            // Retrieve confirmed appointments for the current dentist
-            var confirmedAppointments = _appointment.GetConfirmedAppointments(dentistId);
-
-            // Assign confirmed appointments to the viewModel
-            viewModel.Appointments = confirmedAppointments;
-
-            return View(viewModel);
+            var treatment = await _treatmentService.GetTreatmentByIdAsync(id);
+            if (treatment == null)
+            {
+                return NotFound();
+            }
+            return View(treatment);
         }
 
         [HttpPost]
-        public IActionResult Create(TreatmentViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, Treatment treatment)
         {
-            if (!ModelState.IsValid)
+            if (id != treatment.Id)
             {
-                // If model validation fails, return the view with validation errors
-                return View(viewModel);
+                return NotFound();
             }
 
-            // Check if AppointmentId is selected
-            if (viewModel.AppointmentId == 0)
+            if (ModelState.IsValid)
             {
-                // If no appointment is selected, add a model error
-                ModelState.AddModelError("AppointmentId", "Please select an appointment.");
-                return View(viewModel);
+                try
+                {
+                    await _treatmentService.UpdateTreatmentAsync(treatment);
+                }
+                catch (Exception)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Index));
             }
-
-            // Assuming you have a method to save the treatment plan in your service
-            _treatmentService.CreateTreatment(viewModel);
-
-            return RedirectToAction("Index");
+            return View(treatment);
         }
 
-
-
-
-        /*
         [HttpGet]
-        public IActionResult Create(int appointmentId)
+        public async Task<IActionResult> Delete(int id)
         {
-            var treatmentViewModel = new TreatmentViewModel
+            var treatment = await _treatmentService.GetTreatmentByIdAsync(id);
+            if (treatment == null)
             {
-                AppointmentId = appointmentId
-            };
-            return View(treatmentViewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(TreatmentViewModel vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
+                return NotFound();
             }
-            var treatment = TreatmentViewModel.ConvertViewModelToTreatment(vm);
-            // Insert the appointment
-            _treatmentService.CreateTreatment(vm);
-
-            return RedirectToAction("Index");
+            return View(treatment);
         }
-        /*
-        [HttpPost]
-        public async Task<IActionResult> Create(TreatmentViewModel treatmentViewModel)
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(treatmentViewModel);
-            }
-
-            // Convert view model to Treatment model
-            var treatment = TreatmentViewModel.ConvertViewModelToTreatment(treatmentViewModel);
-
-            // Save the treatment using the service
-            await _treatmentService.CreateTreatmentAsync(treatment);
-
-            // Redirect to a success page or another action
-            return RedirectToAction("Index", "Home");
+            await _treatmentService.DeleteTreatmentAsync(id);
+            return RedirectToAction(nameof(Index));
         }
 
-        // Other actions for updating, deleting treatments, etc.
-
-        */
     }
 }
