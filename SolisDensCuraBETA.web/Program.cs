@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories;
 using SolisDensCuraBETA.repositories.Implementation;
@@ -35,6 +33,9 @@ builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>()
 builder.Services.AddTransient<ISupplies, SuppliesService>();
 builder.Services.AddTransient<IAppointment, AppointmentService>();
 builder.Services.AddTransient<ITreatmentService, TreatmentService>();
+
+builder.Services.AddTransient<ICostService, CostService>();
+
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 

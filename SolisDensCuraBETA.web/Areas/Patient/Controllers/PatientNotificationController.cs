@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SolisDensCuraBETA.utilities;
-using System.Threading.Tasks;
 
 
 namespace SolisDensCuraBETA.web.Areas.Patient.Controllers

@@ -18,6 +18,7 @@ namespace SolisDensCuraBETA.repositories
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Bill> Bills { get; set; }
+        public DbSet<Cost> Costs { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Insurance> Insurances { get; set; }

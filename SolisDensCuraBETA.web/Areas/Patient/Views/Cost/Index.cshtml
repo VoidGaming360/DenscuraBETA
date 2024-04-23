@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SolisDensCuraBETA.viewmodels.CostViewModel>
+
+<h1>Invoices for Existing Treatments</h1>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Treatment ID</th>
+                <th>Total Cost</th>
+                <th>Customer Name</th>
+                <th>Date</th>
+                <th>Payment Status</th>
+                <th>Action</th> <!-- New column for action button -->
+                <!-- Add more columns as needed for invoice details -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cost in Model)
+            {
+                <tr>
+                    <td>@cost.TreatmentId</td>
+                    <td>@cost.TotalCost</td>
+                    <td>Patient 3</td>
+                    <td>@cost.Date.ToShortDateString()</td>
+                    <td>
+                        @(cost?.PaymentStatus.Equals(SolisDensCuraBETA.model.PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase) == true
+                            ? "Pending"
+                            : (cost != null ? cost.PaymentStatus : ""))
+                    </td>
+                    <td>
+                        <!-- Form for updating payment status -->
+                        <form asp-action="UpdatePaymentStatus" asp-route-treatmentId="@cost.TreatmentId">
+                            <div class="form-group">
+                                <td>
+                                    @if (User.IsInRole("Dentist"))
+                                    {
+                                        <form asp-action="UpdatePaymentStatus" method="post">
+                                            <input type="hidden" name="treatmentId" value="@cost.TreatmentId" />
+                                                <select name="paymentStatus" class="form-control">
+                                                                @foreach (SolisDensCuraBETA.model.PaymentStatus status in Enum.GetValues(typeof(SolisDensCuraBETA.model.PaymentStatus)))
+                                                                {
+                                                                    string selected = cost.PaymentStatus == status.ToString() ? "selected" : "";
+                                                        <option value="@status.ToString()" selected="@selected">
+                                                                        @status.ToString()
+                                                        </option>
+                                                                }
+                                                </select>
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </form>
+                                    }
+                                </td>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No invoices found for existing treatments.</p>
+}
