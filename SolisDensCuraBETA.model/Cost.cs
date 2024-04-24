@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SolisDensCuraBETA.model
+﻿namespace SolisDensCuraBETA.model
 {
     public class Cost
     {

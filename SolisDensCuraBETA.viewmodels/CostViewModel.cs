@@ -10,7 +10,7 @@ namespace SolisDensCuraBETA.viewmodels
         public string CustomerName { get; set; }
         public DateTime Date { get; set; }
 
-        public string PaymentStatus { get; set; } = "Pending";
+        public string PaymentStatus { get; set; } = "Paid";
 
     }
 }

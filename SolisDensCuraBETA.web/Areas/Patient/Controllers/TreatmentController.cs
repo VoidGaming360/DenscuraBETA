@@ -2,10 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.services;
-using SolisDensCuraBETA.viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.controllers
 {

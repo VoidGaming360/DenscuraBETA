@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SolisDensCuraBETA.model;
+﻿using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories.Interfaces;
-using SolisDensCuraBETA.viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
 {

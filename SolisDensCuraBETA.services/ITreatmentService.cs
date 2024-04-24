@@ -1,12 +1,5 @@
 ﻿using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SolisDensCuraBETA.services
 {
     public interface ITreatmentService

@@ -1,8 +1,5 @@
 ﻿using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SolisDensCuraBETA.services
 {
