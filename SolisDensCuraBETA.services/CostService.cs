@@ -1,6 +1,8 @@
 ﻿using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.services.Interface;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
@@ -34,6 +36,13 @@ namespace SolisDensCuraBETA.services
         public async Task<IEnumerable<Cost>> GetAllCostsAsync()
         {
             return await _unitOfWork.GenericRepositories<Cost>().GetAllAsync();
+        }
+
+        public async Task<IEnumerable<Cost>> GetCostsByTreatmentIdsAsync(IEnumerable<int> treatmentIds)
+        {
+            return await Task.Run(() =>
+                _unitOfWork.GenericRepositories<Cost>().GetAll(c => treatmentIds.Contains(c.TreatmentId)).ToList()
+            );
         }
     }
 }

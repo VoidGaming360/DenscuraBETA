@@ -52,10 +52,11 @@ namespace SolisDensCuraBETA.services
             }
         }
 
-        public Task<int> CountTreatmentsAsync(Expression<Func<Treatment, bool>> predicate = null)
+        public async Task<IEnumerable<Treatment>> GetTreatmentsByAppointmentIdsAsync(IEnumerable<int> appointmentIds)
         {
-            int count = _unitOfWork.GenericRepositories<Treatment>().Count(predicate);
-            return Task.FromResult(count);
+            return await Task.Run(() =>
+                _unitOfWork.GenericRepositories<Treatment>().GetAll(t => appointmentIds.Contains(t.AppointmentId)).ToList()
+            );
         }
     }
 }

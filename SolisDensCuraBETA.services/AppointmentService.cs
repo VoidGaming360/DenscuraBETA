@@ -162,6 +162,10 @@ namespace SolisDensCuraBETA.services
                 await _unitOfWork.SaveChangesAsync();
             }
         }
+        public IEnumerable<Appointment> GetAppointmentsForPatient(string patientId)
+        {
+            return _unitOfWork.GenericRepositories<Appointment>().GetAll(a => a.PatientId == patientId).ToList();
+        }
 
         public IEnumerable<Treatment> GetTreatmentsForAppointment(int appointmentId)
         {

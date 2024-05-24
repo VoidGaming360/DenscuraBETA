@@ -35,9 +35,30 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var treatments = _treatmentService.GetAllTreatments();
+            var userId = _userManager.GetUserId(User);
+            var userRoles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+
+            IEnumerable<Treatment> treatments;
+
+            if (userRoles.Contains("Patient"))
+            {
+                var patientAppointments = _appointmentService.GetAppointmentsForPatient(userId);
+                var appointmentIds = patientAppointments.Select(a => a.Id);
+                treatments = await _treatmentService.GetTreatmentsByAppointmentIdsAsync(appointmentIds);
+            }
+            else if (userRoles.Contains("Dentist"))
+            {
+                var dentistAppointments = _appointmentService.GetAppointmentsForDentist(userId);
+                var appointmentIds = dentistAppointments.Select(a => a.Id);
+                treatments = await _treatmentService.GetTreatmentsByAppointmentIdsAsync(appointmentIds);
+            }
+            else
+            {
+                treatments = Enumerable.Empty<Treatment>();
+            }
+
             return View(treatments);
         }
 
@@ -213,18 +234,43 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         [Authorize(Roles = "Patient, Dentist")]
         public async Task<IActionResult> InvoiceList()
         {
-        var costs = await _costService.GetAllCostsAsync();
-        var costViewModels = costs.Select(cost => new CostViewModel
-        {
-            Id = cost.Id,
-            TreatmentId = cost.TreatmentId,
-            TotalCost = cost.TotalCost,
-            CustomerName = cost.CustomerName,
-            Date = cost.Date,
-            PaymentStatus = cost.PaymentStatus.ToString()
-        }).ToList();
+            var userId = _userManager.GetUserId(User);
+            var userRoles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
 
-        return View(costViewModels);
+            IEnumerable<Cost> costs;
+
+            if (userRoles.Contains("Patient"))
+            {
+                var patientAppointments = _appointmentService.GetAppointmentsForPatient(userId);
+                var appointmentIds = patientAppointments.Select(a => a.Id);
+                var treatments = await _treatmentService.GetTreatmentsByAppointmentIdsAsync(appointmentIds);
+                var treatmentIds = treatments.Select(t => t.Id);
+                costs = await _costService.GetCostsByTreatmentIdsAsync(treatmentIds);
+            }
+            else if (userRoles.Contains("Dentist"))
+            {
+                var dentistAppointments = _appointmentService.GetAppointmentsForDentist(userId);
+                var appointmentIds = dentistAppointments.Select(a => a.Id);
+                var treatments = await _treatmentService.GetTreatmentsByAppointmentIdsAsync(appointmentIds);
+                var treatmentIds = treatments.Select(t => t.Id);
+                costs = await _costService.GetCostsByTreatmentIdsAsync(treatmentIds);
+            }
+            else
+            {
+                costs = Enumerable.Empty<Cost>();
+            }
+
+            var costViewModels = costs.Select(cost => new CostViewModel
+            {
+                Id = cost.Id,
+                TreatmentId = cost.TreatmentId,
+                TotalCost = cost.TotalCost,
+                CustomerName = cost.CustomerName,
+                Date = cost.Date,
+                PaymentStatus = cost.PaymentStatus.ToString()
+            }).ToList();
+
+            return View(costViewModels);
         }
 
 

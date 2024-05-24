@@ -22,5 +22,6 @@ namespace SolisDensCuraBETA.services.Interface
         void DeleteAppointment(int id);
 
         IEnumerable<Appointment> GetConfirmedAppointments(string dentistId);
+        IEnumerable<Appointment> GetAppointmentsForPatient(string patientId);
     }
 }

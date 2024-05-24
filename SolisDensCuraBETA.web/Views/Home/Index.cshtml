@@ -26,7 +26,6 @@
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="css/jquery.timepicker.css">
 
-
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
@@ -40,7 +39,7 @@
                     <div class="col-md-6 col-sm-12 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
                         <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Modern Dentistry in a Calm and Relaxed Environment</h1>
                         <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                        <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><a href="#" class="btn btn-primary px-4 py-3">Make an Appointment</a></p>
+                        <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><a href="#" class="btn btn-primary px-4 py-3" id="makeAppointmentButton">Make an Appointment</a></p>
                     </div>
                 </div>
             </div>
@@ -51,9 +50,9 @@
             <div class="container">
                 <div class="row slider-text align-items-center" data-scrollax-parent="true">
                     <div class="col-md-6 col-sm-12 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                        <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Modern Achieve Your Desired Perfect Smile</h1>
+                        <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Achieve Your Desired Perfect Smile</h1>
                         <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                        <p><a href="#" class="btn btn-primary px-4 py-3">Make an Appointment</a></p>
+                        <p><a href="#" class="btn btn-primary px-4 py-3" id="makeAppointmentButton2">Make an Appointment</a></p>
                     </div>
                 </div>
             </div>
@@ -94,7 +93,7 @@
                                         <select name="" id="" class="form-control">
                                             <option value="">Department</option>
                                             <option value="">Teeth Whitening</option>
-                                            <option value="">Teeth CLeaning</option>
+                                            <option value="">Teeth Cleaning</option>
                                             <option value="">Quality Brackets</option>
                                             <option value="">Modern Anesthetic</option>
                                         </select>
@@ -242,7 +241,6 @@
         </div>
     </section>
 
-
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center mb-5 pb-5">
@@ -337,7 +335,7 @@
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="col-md-3 aside-stretch py-5">
-                    <div class=" heading-section heading-section-white ftco-animate pr-md-4">
+                    <div class="heading-section heading-section-white ftco-animate pr-md-4">
                         <h2 class="mb-3">Achievements</h2>
                         <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
                     </div>
@@ -464,7 +462,7 @@
             <div class="container">
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
-                        <h2>Subcribe to our Newsletter</h2>
+                        <h2>Subscribe to our Newsletter</h2>
                         <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in</p>
                         <div class="row d-flex justify-content-center mt-5">
                             <div class="col-md-8">
@@ -724,7 +722,6 @@
         </div>
     </section>
 
-
     <footer class="ftco-footer ftco-bg-dark ftco-section">
         <div class="container">
             <div class="row mb-5">
@@ -804,8 +801,6 @@
         </div>
     </footer>
 
-
-
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
 
@@ -844,7 +839,6 @@
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             <!-- <label for="appointment_message" class="text-black">Message</label> -->
                             <textarea name="" id="appointment_message" class="form-control" cols="30" rows="10" placeholder="Message"></textarea>
@@ -858,7 +852,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-migrate-3.0.1.min.js"></script>
@@ -878,5 +871,26 @@
     <script src="js/google-map.js"></script>
     <script src="js/main.js"></script>
 
+    <script>
+        document.getElementById('makeAppointmentButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+            if (isAuthenticated) {
+                window.location.href = '@Url.Action("Create", "Appointment", new { area = "Patient" })';
+            } else {
+                window.location.href = '@Url.Page("/Account/Login", new { area = "Identity" })';
+            }
+        });
+
+        document.getElementById('makeAppointmentButton2').addEventListener('click', function (event) {
+            event.preventDefault();
+            var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+            if (isAuthenticated) {
+                window.location.href = '@Url.Action("Create", "Appointment", new { area = "Patient" })';
+            } else {
+                window.location.href = '@Url.Page("/Account/Login", new { area = "Identity" })';
+            }
+        });
+    </script>
 </body>
 </html>
