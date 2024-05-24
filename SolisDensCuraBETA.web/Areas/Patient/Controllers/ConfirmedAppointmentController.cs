@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.services;
+using SolisDensCuraBETA.services.Interface;
 
 namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 {
@@ -29,13 +29,12 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 
             return View(confirmedAppointments);
         }
-        /*
+
         [HttpPost]
         public IActionResult Proceed(int appointmentId)
         {
             // Redirect to the Create action of the TreatmentController with the appointmentId parameter
-            return RedirectToAction("Create", "Treatment", new { appointmentId });
+            return RedirectToAction("Create", "Treatment", new { area = "Patient", appointmentId });
         }
-        */
     }
 }

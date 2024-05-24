@@ -13,7 +13,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>@ViewData["Title"] - SolisDensCuraBETA.web</title>
+    <title>@ViewData["Title"] - SolisDensCuraBETA</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
 
@@ -69,13 +69,6 @@
                         @if (User.IsInRole("Dentist"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Dentist" asp-controller="DentistHome" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Dentist" asp-controller="Dentist" asp-action="AddTiming">DentistTiming</a>
-                            </li>
-
-                            <li class="nav-item">
                                 <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/DentistRegister">RegisterDentist</a>
                             </li>
                             <li class="nav-item">
@@ -88,7 +81,7 @@
                                 <a class="nav-link text-dark" asp-area="Patient" asp-controller="Treatment" asp-action="Index">TreatmentPlannings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Cost" asp-action="Index">Invoices</a>
+                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Treatment" asp-action="InvoiceList">Invoices</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Patient" asp-controller="Chat" asp-action="Index">Chat</a>
@@ -99,9 +92,6 @@
                         @if (User.IsInRole("Patient"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Home" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Patient" asp-controller="Appointment" asp-action="Create">New Appointment</a>
                             </li>
                             <li class="nav-item">
@@ -111,7 +101,7 @@
                                 <a class="nav-link text-dark" asp-area="Patient" asp-controller="Treatment" asp-action="Index">TreatmentPlannings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Cost" asp-action="Index">Invoices</a>
+                                <a class="nav-link text-dark" asp-area="Patient" asp-controller="Treatment" asp-action="InvoiceList">Invoices</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Patient" asp-controller="Chat" asp-action="Index">Chat</a>

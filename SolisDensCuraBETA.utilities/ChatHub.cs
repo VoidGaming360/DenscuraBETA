@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.utilities
 {
@@ -6,8 +7,7 @@ namespace SolisDensCuraBETA.utilities
     {
         public async Task SendMessage(string user, string message)
         {
-            // Broadcast the received message to all clients
-            await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now);
+            await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SolisDensCuraBETA.repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SolisDensCuraBETA.repositories.Implementation
 {
@@ -19,6 +15,12 @@ namespace SolisDensCuraBETA.repositories.Implementation
             _context = context;
             dbSet = _context.Set<T>();
         }
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await dbSet.ToListAsync();
+        }
+
         void IGenericRepositories<T>.Add(T entity)
         {
             dbSet.Add(entity);

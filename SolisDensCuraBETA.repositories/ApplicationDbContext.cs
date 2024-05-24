@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SolisDensCuraBETA.model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.repositories
 {
@@ -55,6 +50,13 @@ namespace SolisDensCuraBETA.repositories
                 .HasForeignKey(m => m.ReceiverId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict); // Specify the delete behavior here
+
+            modelBuilder.Entity<Appointment>()
+                .HasMany(a => a.Treatments)
+                .WithOne(t => t.Appointment)
+                .HasForeignKey(t => t.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

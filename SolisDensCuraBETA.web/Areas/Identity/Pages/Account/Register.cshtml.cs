@@ -144,7 +144,7 @@ namespace SolisDensCuraBETA.web.Areas.Identity.Pages.Account
                 string filename = await image.ImageUpload(Input.PictureURL);
                 user.PictureUri = filename;
 
-                await _userStore.SetUserNameAsync(user, Input.Name, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
 

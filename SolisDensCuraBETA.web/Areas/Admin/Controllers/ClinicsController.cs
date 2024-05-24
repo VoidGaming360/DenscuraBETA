@@ -1,7 +1,7 @@
 ﻿using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SolisDensCuraBETA.services;
+using SolisDensCuraBETA.services.Interface;
 using SolisDensCuraBETA.viewmodels;
 
 namespace SolisDensCuraBETA.web.Areas.Admin.Controllers

@@ -1,57 +1,39 @@
 ﻿using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.viewmodels;
+using SolisDensCuraBETA.repositories.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
 {
     public class CostService : ICostService
     {
-        private readonly ITreatmentService _treatmentService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CostService(ITreatmentService treatmentService)
+        public CostService(IUnitOfWork unitOfWork)
         {
-            _treatmentService = treatmentService;
+            _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<CostViewModel> GetCostsForExistingTreatments()
+        public async Task AddCostAsync(Cost cost)
         {
-            var treatments = _treatmentService.GetAllTreatments();
-
-            List<CostViewModel> costs = new List<CostViewModel>();
-
-            foreach (var treatment in treatments)
-            {
-                // Check if treatment exists
-                if (treatment != null)
-                {
-                    // Calculate total cost
-                    int totalCost = CalculateTotalCost(treatment);
-
-                    // Format cost information into invoice format
-                    var costViewModel = new CostViewModel
-                    {
-                        TreatmentId = treatment.Id,
-                        TotalCost = totalCost,
-                        // Populate other properties as needed for invoice format
-                    };
-
-                    costs.Add(costViewModel);
-                }
-            }
-
-            return costs;
+            await _unitOfWork.GenericRepositories<Cost>().AddAsync(cost);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        private int CalculateTotalCost(Treatment treatment)
+        public async Task<Cost> GetCostByIdAsync(int id)
         {
-            // Calculate total cost based on individual costs in the treatment
-            int totalCost = 0;
+            return await _unitOfWork.GenericRepositories<Cost>().GetByIdAsync(id);
+        }
 
-            // Include the costs from the Treatment table
-            totalCost += treatment.Costs;
+        public async Task UpdateCostAsync(Cost cost)
+        {
+            _unitOfWork.GenericRepositories<Cost>().Update(cost);
+            await _unitOfWork.SaveChangesAsync();
+        }
 
-            // Add any additional costs from other sources if needed
-
-            return totalCost;
+        public async Task<IEnumerable<Cost>> GetAllCostsAsync()
+        {
+            return await _unitOfWork.GenericRepositories<Cost>().GetAllAsync();
         }
     }
 }

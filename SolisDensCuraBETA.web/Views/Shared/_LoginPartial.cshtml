@@ -1,38 +1,41 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using SolisDensCuraBETA.model;
-@using SolisDensCuraBETA.services;
-
+@using SolisDensCuraBETA.model
+@using SolisDensCuraBETA.services
+@using SolisDensCuraBETA.services.Interface
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject INotificationService NotificationService
-<head>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SolisDensCuraBETA.web.styles.css" asp-append-version="true" />
-</head>
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userId = UserManager.GetUserId(User);
+    var currentUser = UserManager.FindByIdAsync(userId).Result;
+    var notificationsRegistered = HttpContextAccessor.HttpContext.Session.GetString("NotificationsRegistered");
+
+    if (SignInManager.IsSignedIn(User) && notificationsRegistered == null)
+    {
+        NotificationService.RegisterNotifications(User);
+        HttpContextAccessor.HttpContext.Session.SetString("NotificationsRegistered", "true");
+    }
+}
+
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    @*Notification Show/Hide*@
+    @if (SignInManager.IsSignedIn(User))
+    {
         <li class="nav-item">
-            <!-- Use a single div for the dropdown -->
             <div id="notificationBox" class="dropdown">
-                <!-- SVG icon for notifications -->
                 <a class="nav-link text-dark" href="#" id="notificationsLink" title="Notifications">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
                         <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
                     </svg>
                 </a>
-                <!-- Dropdown menu containing notifications -->
                 <ul class="dropdown-menu notification-menu" aria-labelledby="notificationsLink">
-                    <!-- Show notifications for the logged-in user -->
-                    @foreach (var notification in NotificationService.GetNotifications(User)) // Use the service to get notifications
+                    @foreach (var notification in NotificationService.GetNotifications(User))
                     {
                         <li>
                             <a class="dropdown-item" href="#">@notification.Message</a>
                         </li>
                     }
-                    <!-- Show empty notification box if no notifications -->
                     @if (!NotificationService.GetNotifications(User).Any())
                     {
                         <li>
@@ -42,24 +45,22 @@
                 </ul>
             </div>
         </li>
-
-    <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(User.Identity.Name)!</a>
-    </li>
-    
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @currentUser?.Name!</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </ul>

@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.services;
+using SolisDensCuraBETA.services.Interface;
 using SolisDensCuraBETA.viewmodels;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using SolisDensCuraBETA.repositories;
-using SolisDensCuraBETA.repositories.Interfaces;
+using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 {
@@ -16,73 +18,59 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IChatService _chatService;
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ChatController(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext, IChatService chatService, IUnitOfWork unitOfWork)
+        public ChatController(UserManager<ApplicationUser> userManager, IChatService chatService)
         {
             _userManager = userManager;
-            _dbContext = dbContext;
             _chatService = chatService;
-            _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index(string selectedUserId = null)
+        public async Task<IActionResult> Index(string selectedUserId = null)
         {
             var currentUserId = GetCurrentUserId();
-            var users = _userManager.Users.ToList();
+            var users = await _userManager.Users.ToListAsync();
 
-            ViewBag.Users = users;
+            // Filter out the current user and users with the "Admin" role
+            var filteredUsers = new List<ApplicationUser>();
+            foreach (var user in users)
+            {
+                if (user.Id != currentUserId && !(await _userManager.IsInRoleAsync(user, "Admin")))
+                {
+                    filteredUsers.Add(user);
+                }
+            }
+
+            var usersWithMessages = new List<(ApplicationUser User, DateTime? LastMessageDate)>();
+
+            foreach (var user in filteredUsers)
+            {
+                var messages = await _chatService.GetMessagesAsync(user.Id, currentUserId);
+                var lastMessageDate = messages.Max(m => (DateTime?)m.SentAt);
+                usersWithMessages.Add((user, lastMessageDate));
+            }
+
+            var sortedUsers = usersWithMessages
+                .OrderByDescending(u => u.LastMessageDate)
+                .Select(u => u.User)
+                .ToList();
+
+            ViewBag.Users = sortedUsers;
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.SelectedUserId = selectedUserId;
 
             if (!string.IsNullOrEmpty(selectedUserId))
             {
-                ViewBag.SelectedUserId = selectedUserId;
-
-                var messages = _dbContext.ChatMessages
-                .Where(m => (m.SenderId == selectedUserId && m.ReceiverId == currentUserId) ||
-                            (m.SenderId == currentUserId && m.ReceiverId == selectedUserId))
-                .AsEnumerable() // Execute the query in memory
-                .Select(m => new ChatMessageViewModel
+                var messages = await _chatService.GetMessagesAsync(currentUserId, selectedUserId);
+                var messageViewModels = messages.Select(m => new ChatMessageViewModel
                 {
-                    SenderName = m.SenderId == currentUserId ? 
-                    GetCurrentUser().Name : (users.FirstOrDefault(u => u.Id == selectedUserId) != null ? users.FirstOrDefault(u => u.Id == selectedUserId).Name : ""),
+                    SenderName = m.SenderId == currentUserId ? GetCurrentUser().UserName : m.Sender.UserName,
+                    ReceiverName = m.ReceiverId == currentUserId ? GetCurrentUser().UserName : m.Receiver.UserName,
                     Message = m.Message,
-                    SentAt = m.SentAt // Add SentAt property
-                })
-                .OrderBy(m => m.SentAt) // Order the messages by SentAt
-                .ToList();
+                    SentAt = m.SentAt,
+                    ReceiverId = selectedUserId // Set ReceiverId for referencing
+                }).ToList();
 
-                // Order the messages by SentAt
-                messages = messages.OrderBy(m => m.SentAt).ToList();
-
-                ViewBag.Messages = messages;
-            }
-            else
-            {
-                // If no user selected, display messages for the first user in the list
-                var firstUser = users.FirstOrDefault();
-                if (firstUser != null)
-                {
-                    var messages = _dbContext.ChatMessages
-                        .Where(m => (m.SenderId == currentUserId && m.ReceiverId == firstUser.Id) ||
-                                    (m.SenderId == firstUser.Id && m.ReceiverId == currentUserId))
-                        .OrderBy(m => m.SentAt)
-                        .Select(m => new ChatMessageViewModel
-                        {
-                            SenderName = m.SenderId == currentUserId ? GetCurrentUser().UserName : firstUser.UserName,
-                            Message = m.Message
-                        })
-                        .ToList();
-
-                    ViewBag.Messages = messages;
-                }
-                else
-                {
-                    // If no users found, return an empty list of messages
-                    ViewBag.Messages = new List<ChatMessageViewModel>();
-                }
+                ViewBag.Messages = messageViewModels;
             }
 
             return View();
@@ -91,12 +79,11 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(string receiverId, string message)
         {
-            var senderId = GetCurrentUserId(); // Get sender's ID
+            var senderId = GetCurrentUserId();
 
             await _chatService.SendMessageAsync(senderId, receiverId, message);
 
-            // Redirect back to the chat page after sending the message
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { selectedUserId = receiverId });
         }
 
         private string GetCurrentUserId()
@@ -108,23 +95,5 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
         {
             return _userManager.GetUserAsync(User).Result;
         }
-
-        [HttpGet]
-        public IActionResult GetMessages(string receiverId)
-        {
-            // Retrieve messages where either senderId or receiverId matches the provided receiverId
-            var messages = _dbContext.ChatMessages
-                .Where(m => m.SenderId == receiverId || m.ReceiverId == receiverId)
-                .Select(m => new ChatMessageViewModel
-                {
-                    SenderName = m.Sender.Name,
-                    ReceiverName = m.Receiver.Name,
-                    Message = m.Message
-                })
-                .ToList();
-
-            return Json(messages); // Return messages as JSON
-        }
     }
 }
-

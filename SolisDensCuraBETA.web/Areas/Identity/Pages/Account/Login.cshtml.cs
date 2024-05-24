@@ -107,47 +107,32 @@ namespace SolisDensCuraBETA.web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                if (user == null)
+                {
+                    _logger.LogWarning("User with email {Email} not found.", Input.Email);
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user != null)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-                        if (roles.Contains("Admin"))
-                        {
-                            return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
-                        }
-                        else if (roles.Contains("Dentist"))
-                        {
-                            return RedirectToAction("Index", "DentistHome", new { area = "Dentist" });
-                        }
-                        else if (roles.Contains("Patient"))
-                        {
-                            return RedirectToAction("Index", "Home", new { area = "Patient" });
-                        }
-                    }
-
-                    // If the user does not have a role or the role is not recognized, redirect to the default URL
+                    _logger.LogInformation("User with email {Email} logged in successfully.", Input.Email);
                     return LocalRedirect(returnUrl);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("User with email {Email} account locked out.", Input.Email);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
+                    _logger.LogWarning("Invalid login attempt for user with email {Email}.", Input.Email);
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
@@ -156,5 +141,8 @@ namespace SolisDensCuraBETA.web.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+
+
     }
 }

@@ -1,14 +1,18 @@
 ﻿using SolisDensCuraBETA.model;
-using SolisDensCuraBETA.repositories.Interfaces;
 using SolisDensCuraBETA.repositories;
+using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.services.Interface;
 using SolisDensCuraBETA.utilities;
 using SolisDensCuraBETA.viewmodels;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
 {
     public class AppointmentService : IAppointment
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationDbContext _dbContext;
 
         public AppointmentService(IUnitOfWork unitOfWork, ApplicationDbContext dbContext)
@@ -49,12 +53,9 @@ namespace SolisDensCuraBETA.services
 
         public IEnumerable<Appointment> GetAppointmentsForDentist(string currentUserId)
         {
-            // Retrieve appointments where the SelectedDentistId matches the current user's ID
             return _unitOfWork.GenericRepositories<Appointment>()
                 .Where(a => a.SelectedDentistId == currentUserId);
         }
-
-
 
         public PagedResult<AppointmentViewModel> GetAll(int pageNumber, int pageSize)
         {
@@ -106,26 +107,20 @@ namespace SolisDensCuraBETA.services
                 SelectedDentistId = vm.SelectedDentistId,
                 AppointmentStatus = AppointmentStatus.pending.ToString(),
                 ReasonForVisit = vm.ReasonForVisit,
-
             };
 
-            // Add the appointment to the DbContext
             _unitOfWork.GenericRepositories<Appointment>().Add(appointment);
-
-            // Save changes to the database
             _unitOfWork.Save();
         }
 
         public void RespondToAppointment(int appointmentId, string status)
         {
-            // Retrieve the appointment by its ID
             var appointment = _unitOfWork.GenericRepositories<Appointment>().GetById(appointmentId);
             if (appointment == null)
             {
                 throw new ArgumentException("Appointment not found");
             }
 
-            // Update the appointment status
             switch (status.ToLower())
             {
                 case "confirmed":
@@ -141,7 +136,6 @@ namespace SolisDensCuraBETA.services
                     throw new ArgumentException("Invalid appointment status");
             }
 
-            // Save changes
             _unitOfWork.Save();
         }
 
@@ -156,6 +150,23 @@ namespace SolisDensCuraBETA.services
         {
             _unitOfWork.GenericRepositories<Appointment>().Update(appointment);
             _unitOfWork.Save();
+        }
+
+        public async Task AddTreatmentToAppointmentAsync(int appointmentId, Treatment treatment)
+        {
+            var appointment = _unitOfWork.GenericRepositories<Appointment>().GetById(appointmentId);
+
+            if (appointment != null)
+            {
+                appointment.Treatments.Add(treatment);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public IEnumerable<Treatment> GetTreatmentsForAppointment(int appointmentId)
+        {
+            var appointment = _unitOfWork.GenericRepositories<Appointment>().GetById(appointmentId);
+            return appointment?.Treatments ?? Enumerable.Empty<Treatment>();
         }
 
         private List<AppointmentViewModel> ConvertModelToViewModelList(List<Appointment> modelList)

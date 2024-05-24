@@ -10,6 +10,18 @@
         public string Prescription { get; set; }
         public string Diagnosis { get; set; }
         public int Costs { get; set; }
-        
+        public bool? IsPaid { get; set; } = false;
+        public bool IsPressed { get; set; } = false;
+
+        // Foreign key for Appointment
+        public int AppointmentId { get; set; }
+
+        // Navigation property for Appointment
+        public Appointment Appointment { get; set; }
+
+        public bool GetIsPaid()
+        {
+            return IsPaid ?? false;
+        }
     }
 }

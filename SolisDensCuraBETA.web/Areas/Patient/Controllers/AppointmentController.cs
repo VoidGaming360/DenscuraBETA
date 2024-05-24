@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using SolisDensCuraBETA.model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.services.Interface;
 
 namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
 {
@@ -144,12 +144,6 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
                     return Json(new { success = false, message = "Appointment not found" });
                 }
 
-                // Check if the appointment status is confirmed
-                if (appointment.AppointmentStatus != AppointmentStatus.confirmed.ToString())
-                {
-                    return Json(new { success = false, message = "Appointment status must be confirmed to set appointment date" });
-                }
-
                 // Update the appointment date
                 appointment.AppointmentDate = model.AppointmentDate;
 
@@ -157,20 +151,8 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
                 _unitOfWork.GenericRepositories<Appointment>().Update(appointment);
                 _unitOfWork.Save();
 
-                // Determine the response message based on the appointment status
-                string responseMessage = "Appointment date set successfully";
-                if (appointment.AppointmentStatus == AppointmentStatus.pending.ToString())
-                {
-                    responseMessage = "Wait for confirmation";
-                }
-                else if (appointment.AppointmentStatus == AppointmentStatus.denied.ToString())
-                {
-                    responseMessage = "Appointment Denied";
-                }
-
                 // Redirect to the "ViewAppointments" page
                 return RedirectToAction("ViewAppointments");
-                //return Json(new { success = true, message = responseMessage });
             }
             catch (Exception ex)
             {
@@ -178,6 +160,7 @@ namespace SolisDensCuraBETA.web.Areas.Patient.Controllers
                 return Json(new { success = false, message = "An error occurred while setting the appointment date: " + ex.Message });
             }
         }
+
 
         public IActionResult Delete(int id)
         {

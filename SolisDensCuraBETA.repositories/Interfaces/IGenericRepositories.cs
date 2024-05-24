@@ -9,6 +9,7 @@ namespace SolisDensCuraBETA.repositories.Interfaces
 {
     public interface IGenericRepositories<T> : IDisposable
     {
+        Task<IEnumerable<T>> GetAllAsync();
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,

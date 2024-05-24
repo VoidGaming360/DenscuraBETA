@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories;
 using SolisDensCuraBETA.repositories.Implementation;
 using SolisDensCuraBETA.repositories.Interfaces;
 using SolisDensCuraBETA.services;
+using SolisDensCuraBETA.services.Interface;
 using SolisDensCuraBETA.utilities;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +22,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Configure identity options here if needed
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+
+// Add session services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -33,12 +54,9 @@ builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>()
 builder.Services.AddTransient<ISupplies, SuppliesService>();
 builder.Services.AddTransient<IAppointment, AppointmentService>();
 builder.Services.AddTransient<ITreatmentService, TreatmentService>();
-
 builder.Services.AddTransient<ICostService, CostService>();
-
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
-
 builder.Services.AddScoped<ImageOperations>();
 
 // Add SignalR services
@@ -63,13 +81,16 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Add the session middleware before authentication and authorization middlewares
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -79,15 +100,21 @@ app.Use(async (context, next) =>
     var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
     var notificationService = context.RequestServices.GetRequiredService<INotificationService>();
 
-    // Check if user is authenticated
     if (context.User.Identity.IsAuthenticated)
     {
         var user = await userManager.GetUserAsync(context.User);
-        var userId = user.Id;
-        var userName = user.Name;
+        if (user != null)
+        {
+            var userId = user.Id;
+            var userName = user.Name;
 
-        // Create notification for user login
-        await notificationService.CreateNotificationAsync(userId, $"{userName} has successfully logged in.");
+            await notificationService.CreateNotificationAsync(userId, $"{userName} has successfully logged in.");
+        }
+        else
+        {
+            var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning("Authenticated user not found in UserManager. UserId: {UserId}", context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        }
     }
 
     await next();
@@ -96,8 +123,6 @@ app.Use(async (context, next) =>
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<NotificationHub>("/notificationHub");
-    
-
     endpoints.MapHub<ChatHub>("/chatHub");
     endpoints.MapRazorPages();
 
@@ -110,17 +135,13 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
-
-DataSeeding(app);
+await DataSeeding(app);
 
 app.Run();
 
-void DataSeeding(WebApplication app) // Pass app instance to DataSeeding
+async Task DataSeeding(WebApplication app)
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbInitializer = scope.ServiceProvider
-            .GetRequiredService<IDbInitializer>();
-        dbInitializer.Initialize();
-    }
+    using var scope = app.Services.CreateScope();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    await dbInitializer.InitializeAsync();
 }

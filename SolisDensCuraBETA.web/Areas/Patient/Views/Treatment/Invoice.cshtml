@@ -1,0 +1,37 @@
+﻿@model SolisDensCuraBETA.viewmodels.CostViewModel
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<h1>Invoice for Treatment @Model.TreatmentId</h1>
+
+<div>
+    <h2>Customer: @Model.CustomerName</h2>
+    <p>Date: @Model.Date.ToShortDateString()</p>
+    <p>Total Cost: Rs.@Model.TotalCost</p>
+    <p>Status: @Model.PaymentStatus</p>
+
+    @if (User.IsInRole("Patient"))
+    {
+        <form asp-action="Pay" method="post">
+            <input type="hidden" name="costId" value="@Model.Id" />
+        </form>
+    }
+
+    @if (User.IsInRole("Dentist"))
+    {
+        <form asp-action="UpdatePaymentStatus" method="post">
+            <input type="hidden" name="costId" value="@Model.Id" />
+            <div class="form-group">
+                <label for="status">Update Status</label>
+                <select name="status" class="form-control">
+                    <option value="Pending" selected>Pending</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Overdue">Overdue</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    }
+</div>

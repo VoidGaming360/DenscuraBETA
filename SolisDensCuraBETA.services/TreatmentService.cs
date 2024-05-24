@@ -1,6 +1,11 @@
 ﻿using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.services.Interface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.services
 {
@@ -14,11 +19,12 @@ namespace SolisDensCuraBETA.services
         }
 
         public IEnumerable<Treatment> GetAllTreatments(Expression<Func<Treatment, bool>> filter = null,
-                                               Func<IQueryable<Treatment>, IOrderedQueryable<Treatment>> orderBy = null,
-                                               string includeProperties = "")
+                                                       Func<IQueryable<Treatment>, IOrderedQueryable<Treatment>> orderBy = null,
+                                                       string includeProperties = "")
         {
             return _unitOfWork.GenericRepositories<Treatment>().GetAll(filter, orderBy, includeProperties).ToList();
         }
+
         public async Task<Treatment> GetTreatmentByIdAsync(int id)
         {
             return await _unitOfWork.GenericRepositories<Treatment>().GetByIdAsync(id);
@@ -51,6 +57,5 @@ namespace SolisDensCuraBETA.services
             int count = _unitOfWork.GenericRepositories<Treatment>().Count(predicate);
             return Task.FromResult(count);
         }
-
     }
 }

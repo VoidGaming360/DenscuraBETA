@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SolisDensCuraBETA.services;
 using SolisDensCuraBETA.viewmodels;
 using Microsoft.AspNetCore.Components;
+using SolisDensCuraBETA.services.Interface;
 
 namespace SolisDensCuraBETA.web.Areas.Admin.Controllers
 {

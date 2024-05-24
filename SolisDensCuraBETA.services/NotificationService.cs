@@ -4,12 +4,16 @@ using SolisDensCuraBETA.utilities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SolisDensCuraBETA.services.Interface;
 
 namespace SolisDensCuraBETA.services
 {
     public class NotificationService : INotificationService
     {
-        private readonly ApplicationDbContext _context; // Assuming ApplicationDbContext is your EF context
+        private readonly ApplicationDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -25,10 +29,9 @@ namespace SolisDensCuraBETA.services
             if (user != null && user.Identity.IsAuthenticated)
             {
                 var userId = _userManager.GetUserId(user);
-                // Query the database for notifications belonging to the user
                 var notifications = _context.Notifications
                     .Where(n => n.UserId == userId)
-                    .ToList(); // Execute the query and retrieve the notifications
+                    .ToList();
 
                 return notifications;
             }
@@ -48,12 +51,21 @@ namespace SolisDensCuraBETA.services
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            // Send notification to user using SignalR
             await SendNotificationToUser(userId, message);
         }
+
         private async Task SendNotificationToUser(string userId, string message)
         {
             await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", message);
+        }
+
+        public void RegisterNotifications(ClaimsPrincipal user)
+        {
+            if (user.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(user);
+                CreateNotificationAsync(userId, "You have logged in").Wait();
+            }
         }
     }
 }

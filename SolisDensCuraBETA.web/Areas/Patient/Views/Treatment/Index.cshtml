@@ -2,10 +2,6 @@
 
 <h1>Treatments</h1>
 
-<p>
-    <a asp-action="Create">Add Treatment Plans</a>
-</p>
-
 <table class="table">
     <thead>
         <tr>
@@ -17,7 +13,7 @@
             <th>Prescription</th>
             <th>Diagnosis</th>
             <th>Costs</th>
-            <th>Actions</th> <!-- Added column for actions -->
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -31,11 +27,32 @@
                 <td>@treatment.Description</td>
                 <td>@treatment.Prescription</td>
                 <td>@treatment.Diagnosis</td>
-                <td>@treatment.Costs</td>
+                <td>Rs.@treatment.Costs</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@treatment.Id">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@treatment.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@treatment.Id">Delete</a>
+                    @if (User.IsInRole("Patient"))
+                    {
+                        if (treatment.GetIsPaid())
+                        {
+                            <span>Paid</span>
+                        }
+                        else if (treatment.IsPressed)
+                        {
+                            <span>Waiting for Confirmation</span>
+                        }
+                        else
+                        {
+                            <form asp-action="Pay" method="post">
+                                <input type="hidden" name="treatmentId" value="@treatment.Id" />
+                                <button type="submit" class="btn btn-primary">Pay</button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@treatment.Id">Details</a>
+                        <a asp-action="Edit" asp-route-id="@treatment.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@treatment.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }

@@ -1,46 +1,45 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SolisDensCuraBETA.utilities
 {
     public class DbInitializer : IDbInitializer
     {
-        private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
-        private ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<DbInitializer> _logger;
 
-        public DbInitializer(UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager, 
-            ApplicationDbContext context)
+        public DbInitializer(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context,
+            ILogger<DbInitializer> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _logger = logger;
         }
 
-        public void Initialize()
+        public async Task InitializeAsync()
         {
             try
             {
-                if (_context.Database.GetPendingMigrations().Any())
+                var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
+                if (pendingMigrations.Any())
                 {
-                    _context.Database.Migrate();
+                    await _context.Database.MigrateAsync();
                 }
-
-
             }
             catch (Exception ex)
             {
-                // Handle the exception appropriately, such as logging it
-                Console.WriteLine($"An error occurred while applying migrations: {ex.Message}");
+                _logger.LogError(ex, "An error occurred while applying migrations");
                 throw;
             }
 
@@ -50,48 +49,44 @@ namespace SolisDensCuraBETA.utilities
                 DenscuraRoles.Denscura_Patient,
                 DenscuraRoles.Denscura_Dentist
             };
+
             foreach (var role in roles)
             {
-                if (!_roleManager.RoleExistsAsync(role).Result)
+                if (!await _roleManager.RoleExistsAsync(role))
                 {
-                    var result = _roleManager.CreateAsync(new IdentityRole(role)).Result;
+                    var result = await _roleManager.CreateAsync(new IdentityRole(role));
                     if (!result.Succeeded)
                     {
-                        // Handle role creation failure
-                        Console.WriteLine($"Failed to create role '{role}'");
+                        _logger.LogError("Failed to create role '{Role}'", role);
                     }
                 }
             }
 
             // Create default admin user if not exists
-            var adminEmail = "yalung@admin.com";
-            var adminUser = _userManager.FindByEmailAsync(adminEmail).Result;
+            var adminEmail = "admin@admin.admin";
+            var adminUser = await _userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
                 {
-                    UserName = "Yalung",
-                    Email = adminEmail
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true 
                 };
 
-                // Generate a secure password
-                var password = "Yalung@123"; // Change this to a secure default password
-                adminUser.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(adminUser, password);
-
-                var result = _userManager.CreateAsync(adminUser).Result;
+                var password = "Admin123";
+                var result = await _userManager.CreateAsync(adminUser, password);
                 if (result.Succeeded)
                 {
-                    var addToRoleResult = _userManager.AddToRoleAsync(adminUser, DenscuraRoles.Denscura_Admin).Result;
+                    var addToRoleResult = await _userManager.AddToRoleAsync(adminUser, DenscuraRoles.Denscura_Admin);
                     if (!addToRoleResult.Succeeded)
                     {
-                        // Handle adding user to role failure
-                        Console.WriteLine($"Failed to add user '{adminEmail}' to role '{DenscuraRoles.Denscura_Admin}'");
+                        _logger.LogError("Failed to add user '{Email}' to role '{Role}'", adminEmail, DenscuraRoles.Denscura_Admin);
                     }
                 }
                 else
                 {
-                    // Handle user creation failure
-                    Console.WriteLine($"Failed to create user '{adminEmail}'");
+                    _logger.LogError("Failed to create user '{Email}'", adminEmail);
                 }
             }
         }

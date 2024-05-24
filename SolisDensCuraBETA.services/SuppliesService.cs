@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using SolisDensCuraBETA.model;
 using SolisDensCuraBETA.repositories.Interfaces;
+using SolisDensCuraBETA.services.Interface;
 using SolisDensCuraBETA.utilities;
 using SolisDensCuraBETA.viewmodels;
 using System;

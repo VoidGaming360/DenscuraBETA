@@ -425,9 +425,8 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalCost")
                         .HasColumnType("int");
@@ -857,6 +856,9 @@ namespace SolisDensCuraBETA.repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Costs")
                         .HasColumnType("int");
 
@@ -867,6 +869,12 @@ namespace SolisDensCuraBETA.repositories.Migrations
                     b.Property<string>("Diagnosis")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPressed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Notes")
                         .IsRequired()
@@ -884,6 +892,8 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
 
                     b.ToTable("Treatments");
                 });
@@ -1143,6 +1153,22 @@ namespace SolisDensCuraBETA.repositories.Migrations
                         .HasForeignKey("DoctorIDId");
 
                     b.Navigation("DoctorID");
+                });
+
+            modelBuilder.Entity("SolisDensCuraBETA.model.Treatment", b =>
+                {
+                    b.HasOne("SolisDensCuraBETA.model.Appointment", "Appointment")
+                        .WithMany("Treatments")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+                });
+
+            modelBuilder.Entity("SolisDensCuraBETA.model.Appointment", b =>
+                {
+                    b.Navigation("Treatments");
                 });
 
             modelBuilder.Entity("SolisDensCuraBETA.model.Clinic", b =>

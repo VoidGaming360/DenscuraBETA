@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SolisDensCuraBETA.services;
+using SolisDensCuraBETA.services.Interface;
 
 namespace SolisDensCuraBETA.web.Areas.Admin.Controllers
 {
